@@ -1,0 +1,97 @@
+iff -uNr gdlmm-3.2.1/gdl/gdlmm/docklayout.cc gdlmm-3.3.2/gdl/gdlmm/docklayout.cc
+--- gdlmm-3.2.1/gdl/gdlmm/docklayout.cc	2011-10-17 22:02:12.000000000 +0200
++++ gdlmm-3.3.2/gdl/gdlmm/docklayout.cc	2011-11-23 18:47:10.000000000 +0100
+@@ -165,11 +165,6 @@
+   return Glib::ListHandler<Glib::ustring>::list_to_vector(gdl_dock_layout_get_layouts(gobj(), static_cast<int>(include_default)), Glib::OWNERSHIP_SHALLOW);
+ }
+ 
+-void DockLayout::run_manager()
+-{
+-gdl_dock_layout_run_manager(gobj()); 
+-}
+-
+ bool DockLayout::load_from_file(const std::string& filename)
+ {
+   return gdl_dock_layout_load_from_file(gobj(), filename.c_str());
+diff -uNr gdlmm-3.2.1/gdl/gdlmm/docklayout.h gdlmm-3.3.2/gdl/gdlmm/docklayout.h
+--- gdlmm-3.2.1/gdl/gdlmm/docklayout.h	2011-10-17 22:02:12.000000000 +0200
++++ gdlmm-3.3.2/gdl/gdlmm/docklayout.h	2011-11-23 18:47:10.000000000 +0100
+@@ -114,9 +114,6 @@
+   std::vector<Glib::ustring> get_layouts(bool include_default);
+   
+   
+-  void run_manager();
+-  
+-  
+   bool load_from_file(const std::string& filename);
+   
+   
+diff -uNr gdlmm-3.2.1/gdl/src/docklayout.hg gdlmm-3.3.2/gdl/src/docklayout.hg
+--- gdlmm-3.2.1/gdl/src/docklayout.hg	2011-10-17 22:01:29.000000000 +0200
++++ gdlmm-3.3.2/gdl/src/docklayout.hg	2011-11-23 18:40:16.000000000 +0100
+@@ -52,8 +52,6 @@
+ #m4 _CONVERSION(`GList*',`std::vector<Glib::ustring>',`Glib::ListHandler<Glib::ustring>::list_to_vector($3, Glib::OWNERSHIP_SHALLOW)')
+   _WRAP_METHOD(std::vector<Glib::ustring> get_layouts(bool include_default), gdl_dock_layout_get_layouts)
+   
+-  _WRAP_METHOD(void run_manager(), gdl_dock_layout_run_manager)
+-  
+   _WRAP_METHOD(bool load_from_file(const std::string& filename), gdl_dock_layout_load_from_file)
+   
+   _WRAP_METHOD(bool save_to_file(const std::string& filename), gdl_dock_layout_save_to_file)
+diff -uNr gdlmm-3.2.1/gdl/src/gdl_method.defs gdlmm-3.3.2/gdl/src/gdl_method.defs
+--- gdlmm-3.2.1/gdl/src/gdl_method.defs	2011-10-17 22:01:29.000000000 +0200
++++ gdlmm-3.3.2/gdl/src/gdl_method.defs	2011-11-23 18:40:16.000000000 +0100
+@@ -532,12 +532,6 @@
+   )
+ )
+ 
+-(define-method run_manager
+-  (of-object "GdlDockLayout")
+-  (c-name "gdl_dock_layout_run_manager")
+-  (return-type "none")
+-)
+-
+ (define-method load_from_file
+   (of-object "GdlDockLayout")
+   (c-name "gdl_dock_layout_load_from_file")
+--- gdlmm-3.3.2/gdl/gdlmm/docklayout.cc.get_layouts_ui	2011-11-23 19:47:10.000000000 +0200
++++ gdlmm-3.3.2/gdl/gdlmm/docklayout.cc	2012-04-23 00:35:26.839494884 +0300
+@@ -180,11 +180,6 @@
+   return gdl_dock_layout_is_dirty(const_cast<GdlDockLayout*>(gobj()));
+ }
+ 
+-Gtk::Widget* DockLayout::get_layouts_ui()
+-{
+-  return Glib::wrap(gdl_dock_layout_get_layouts_ui(gobj()));
+-}
+-
+ 
+ #ifdef GLIBMM_PROPERTIES_ENABLED
+ Glib::PropertyProxy_ReadOnly<bool> DockLayout::property_dirty() const
+diff --git a/gdl/src/dock.hg b/gdl/src/dock.hg
+index 6637f05..0bbb262 100644
+--- a/gdl/src/dock.hg
++++ b/gdl/src/dock.hg
+@@ -56,7 +56,7 @@ public:
+   
+   //_WRAP_METHOD(void xor_rect(GdkRectangle *rect), gdl_dock_xor_rect)
+   
+-  _WRAP_METHOD(void xor_rect_hide(), gdl_dock_xor_rect_hide)
++  _WRAP_METHOD(void hide_preview(), gdl_dock_hide_preview)
+   
+   _WRAP_PROPERTY("default-title", Glib::ustring)
+   
+diff --git a/gdl/src/docklayout.hg b/gdl/src/docklayout.hg
+index 155d58b..e45266e 100644
+--- a/gdl/src/docklayout.hg
++++ b/gdl/src/docklayout.hg
+@@ -58,9 +58,6 @@ public:
+   
+   _WRAP_METHOD(bool is_dirty() const, gdl_dock_layout_is_dirty)
+   
+-  _WRAP_METHOD(Gtk::Widget* get_layouts_ui(), gdl_dock_layout_get_layouts_ui)
+-  
+-  
+   _WRAP_PROPERTY("dirty", bool)
+   
+   _WRAP_PROPERTY("master", Glib::RefPtr<DockMaster>)

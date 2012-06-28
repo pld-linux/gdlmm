@@ -2,14 +2,15 @@ Summary:	C++ bindings for gdl library
 Summary(pl.UTF-8):	Wiązania C++ do biblioteko gdl
 Name:		gdlmm
 Version:	3.2.1
-Release:	5
+Release:	6
 License:	LGPL v2.1
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gdlmm/3.2/%{name}-%{version}.tar.xz
 # Source0-md5:	d07999618fcec79a2287bb23d01fc4d2
+Patch0:		%{name}-api-3.4.patch
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1:1.9
-BuildRequires:	gdl-devel >= 3.0.0
+BuildRequires:	gdl-devel >= 3.4.0
 BuildRequires:	glibmm-devel >= 2.16.0
 BuildRequires:	gtkmm3-devel >= 3.0.0
 BuildRequires:	libtool
@@ -20,14 +21,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 C++ bindings for gdl library.
 
 %description -l pl.UTF-8
-Wiązania C++ do biblioteki gdl..
+Wiązania C++ do biblioteki gdl.
 
 %package devel
 Summary:	Header files for gdlmm library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki gdlmm
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	gdl-devel >= 3.0.0
+Requires:	gdl-devel >= 3.4.0
 Requires:	glibmm-devel >= 2.12.8
 Requires:	gtkmm3-devel >= 3.0.0
 
@@ -62,10 +63,12 @@ Dokumentacja API biblioteki gdlmm.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %configure \
 	--enable-static \
+	--disable-silent-rules
 
 %{__make}
 
@@ -74,6 +77,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+%{__rm} $RPM_BUILD_ROOT/%{_libdir}/libgdlmm-3.0.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -91,7 +96,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgdlmm-3.0.so
 %{_libdir}/gdlmm-3.0
-%{_libdir}/libgdlmm-3.0.la
 %{_includedir}/gdlmm-3.0
 %{_pkgconfigdir}/gdlmm-3.0.pc
 
