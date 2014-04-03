@@ -2,7 +2,7 @@ Summary:	C++ bindings for gdl library
 Summary(pl.UTF-8):	Wiązania C++ do biblioteko gdl
 Name:		gdlmm
 Version:	3.2.1
-Release:	7
+Release:	8
 License:	LGPL v2.1
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gdlmm/3.2/%{name}-%{version}.tar.xz
@@ -54,6 +54,9 @@ Statyczna biblioteka gdlmm.
 Summary:	gdlmm API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki gdlmm
 Group:		Documentation
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description apidocs
 API and internal documentation for gdlmm library.
