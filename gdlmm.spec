@@ -1,13 +1,12 @@
 Summary:	C++ bindings for gdl library
 Summary(pl.UTF-8):	Wiązania C++ do biblioteko gdl
 Name:		gdlmm
-Version:	3.2.1
-Release:	8
+Version:	3.7.3
+Release:	1
 License:	LGPL v2.1
 Group:		Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gdlmm/3.2/%{name}-%{version}.tar.xz
-# Source0-md5:	d07999618fcec79a2287bb23d01fc4d2
-Patch0:		%{name}-api-3.4.patch
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gdlmm/3.7/%{name}-%{version}.tar.xz
+# Source0-md5:	518623e187d8bbe4c40c1d0dc3663e05
 BuildRequires:	autoconf
 BuildRequires:	automake >= 1:1.9
 BuildRequires:	gdl-devel >= 3.4.0
@@ -66,7 +65,6 @@ Dokumentacja API biblioteki gdlmm.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %configure \
@@ -93,7 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README
 %attr(755,root,root) %{_libdir}/libgdlmm-3.0.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgdlmm-3.0.so.0
+%attr(755,root,root) %ghost %{_libdir}/libgdlmm-3.0.so.2
 
 %files devel
 %defattr(644,root,root,755)
