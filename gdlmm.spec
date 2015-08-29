@@ -1,19 +1,28 @@
+#
+# Conditional build:
+%bcond_without	static_libs	# static library
+#
 Summary:	C++ bindings for gdl library
-Summary(pl.UTF-8):	Wiązania C++ do biblioteko gdl
+Summary(pl.UTF-8):	Wiązania C++ do biblioteki gdl
 Name:		gdlmm
 Version:	3.7.3
 Release:	1
-License:	LGPL v2.1
+License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gdlmm/3.7/%{name}-%{version}.tar.xz
 # Source0-md5:	518623e187d8bbe4c40c1d0dc3663e05
-BuildRequires:	autoconf
+URL:		https://github.com/GNOME/gdlmm
+BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1:1.9
-BuildRequires:	gdl-devel >= 3.4.0
+BuildRequires:	gdl-devel >= 3.7
 BuildRequires:	glibmm-devel >= 2.16.0
 BuildRequires:	gtkmm3-devel >= 3.0.0
-BuildRequires:	libtool
+BuildRequires:	libstdc++-devel
+BuildRequires:	libtool >= 2:1.5
+BuildRequires:	mm-common >= 0.8
 BuildRequires:	pkgconfig
+Requires:	gdl >= 3.7
+Requires:	glibmm >= 2.16.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -27,8 +36,8 @@ Summary:	Header files for gdlmm library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki gdlmm
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	gdl-devel >= 3.4.0
-Requires:	glibmm-devel >= 2.12.8
+Requires:	gdl-devel >= 3.7
+Requires:	glibmm-devel >= 2.16.0
 Requires:	gtkmm3-devel >= 3.0.0
 
 %description devel
@@ -68,7 +77,7 @@ Dokumentacja API biblioteki gdlmm.
 
 %build
 %configure \
-	--enable-static \
+	%{?with_static_libs:--enable-static} \
 	--disable-silent-rules
 
 %{__make}
@@ -79,7 +88,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} $RPM_BUILD_ROOT/%{_libdir}/libgdlmm-3.0.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libgdlmm-3.0.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -100,9 +109,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gdlmm-3.0
 %{_pkgconfigdir}/gdlmm-3.0.pc
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libgdlmm-3.0.a
+%endif
 
 %files apidocs
 %defattr(644,root,root,755)
